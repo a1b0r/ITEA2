@@ -1,8 +1,9 @@
-class Shop:
+class Market:
+
     _total_sales = 0
 
-
-class Market(Shop):
+    def get_total_sales():
+        return Market._total_sales
 
     _name = None
     _sales = 0
@@ -10,11 +11,11 @@ class Market(Shop):
     def __init__(self, name, sales=0):
         self._name = name
         self._sales = sales
-        Shop._total_sales += self._sales
+        Market._total_sales += self._sales
 
     def add_sale(self,sale):
         self._sales += sale
-        Shop._total_sales += self._sales
+        Market._total_sales += self._sales
 
     def __str__(self):
         plural = ''
@@ -42,4 +43,4 @@ atb4 = Market('ATB4', 4)
 atb4.add_sale(4)
 print(atb4)
 
-print('Total sales: ' + str(Shop._total_sales))
+print('Total sales: {}'.format(Market.get_total_sales()))
