@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class Persona(ABC):
-
     _second_name = None
     _birthday = None
     _department = None
@@ -31,11 +30,12 @@ class Persona(ABC):
     def show_actual_age(self):
         pass
 
+
 class Enrollee(Persona):
 
     def __init__(self, second_name, birthday, department):
         self._second_name = second_name
-        self. _birthday = birthday
+        self._birthday = birthday
         self._department = department
 
     @property
@@ -78,7 +78,7 @@ class Enrollee(Persona):
         print('''second name     is {}
 birthday        is {}
 department      is {}'''.format(self.second_name, self.birthday, self.department))
-        if isinstance(self, Enrollee):
+        if type(self) == Enrollee:
             print('=' * 20)
 
     def show_actual_age(self):
@@ -157,20 +157,19 @@ work experience is {}'''.format(self.position, self.work_experience))
 
 
 personas = []
-personas.append(Enrollee('Peregrin','12.06.1991','D1'))
-personas.append(Enrollee('Samwise','23.08.1991','D2'))
-personas.append(Enrollee('Bilbo','09.05.1991','D3'))
-personas.append(Enrollee('Frodo','01.01.1991','D3'))
+personas.append(Enrollee('Peregrin', '12.06.1991', 'D1'))
+personas.append(Enrollee('Samwise', '23.08.1991', 'D2'))
+personas.append(Enrollee('Bilbo', '09.05.1991', 'D3'))
+personas.append(Enrollee('Frodo', '01.01.1991', 'D3'))
 
+personas.append(Student('Aragorn', '06.12.1988', 'D1', 4))
+personas.append(Student('Legolas', '08.02.1963', 'D2', 3))
+personas.append(Student('Boromir', '03.07.1987', 'D2', 5))
+personas.append(Student('Gimli', '28.02.1986', 'D3', 6))
 
-personas.append(Student('Aragorn','06.12.1988','D1',4))
-personas.append(Student('Legolas','08.02.1963','D2',3))
-personas.append(Student('Boromir','03.07.1987','D2',5))
-personas.append(Student('Gimli','28.02.1986','D3',6))
-
-personas.append(Teacher('Gandalf','04.06.1963','D1','professor', 40))
-personas.append(Teacher('Sauron','24.06.1959','D2','evil', 44))
-personas.append(Teacher('Elrond','18.11.1955','D3','proffessor', 48))
+personas.append(Teacher('Gandalf', '04.06.1963', 'D1', 'professor', 40))
+personas.append(Teacher('Sauron', '24.06.1959', 'D2', 'evil', 44))
+personas.append(Teacher('Elrond', '18.11.1955', 'D3', 'proffessor', 48))
 
 for persona in personas:
     persona.show_all_information()
