@@ -25,6 +25,6 @@ class File:
 
 
 with File('file01.txt', 'w') as file:
-    print('__main__')
+    print("__main__")
     for i in range(random.randint(1, 10)):
         file.write("This is line %d\r" % (i + 1))
