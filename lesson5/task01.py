@@ -1,72 +1,42 @@
 # Создать декоратор, который будет запускать функцию в отдельном потоке.
 # Декоратор должен принимать следующие аргументы: название потока, является ли поток демоном.
 
-def decorator(number_of_repeats):
-    print(number_of_repeats)
-
-    def actual_decorator(func):
-        def wrapper(*args, **kwargs):
-            print(args, kwargs)
-            for i in range(number_of_repeats):
-                print('The begin of wrapper')
-                result = func(*args, **kwargs)
-                print('The end of wrapper')
-            return result, func.__name__
-        return wrapper
-    return actual_decorator
+from threading import Thread
+import random
+import time
 
 
-@decorator(10)
-def addition(arg1, arg2):
-    return arg1 + arg2
+class RandomGeneratorThread(Thread):
+    def __init__(self, name, daemon):
+        self._name = name
+        self._daemon = bool(daemon)
+        Thread.__init__(self, name=self._name)
+
+    def run(self):
+        print(f"I'm executing {self._name} with demon {self._daemon}")
+        time.sleep(random.randint(0, 5))
+        print(f"The end of {self._name} with demon {self._daemon}")
 
 
-print(addition(1,2))
+def decorator(func):
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        thrd = RandomGeneratorThread(args[0], args[1])
+        if args[1]:
+            thrd.daemon = True
+        thrd.start()
+        return result
+    return wrapper
 
 
-from time import time
-import requests
-from requests.exceptions import HTTPError
-import urllib3
-
-proxies = {
-    "http": 'http://127.0.0.1:3128',  # None
-    "https": 'http://127.0.0.1:3128',  # None
-}
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+@decorator
+def run_decorator(dec_name, dec_demon):
+    pass
 
 
-def decorator(number_of_repeats):
-    def actual_decorator(func):
+number_of_treads = 10
 
-        def wrapper(*args, **kwargs):
-            for i in range(number_of_repeats):
-                start_time = time()
-                print('The begin of wrapper')
-                response = func(*args, **kwargs)
-                print('The end of wrapper')
-                print(f'Running time is {time() - start_time}.')
-            return response, func.__name__
-        return wrapper
-    return actual_decorator
+for new_thread in range(number_of_treads):
+    is_daemon = random.randint(0, 1)
 
-
-@decorator(10)
-def call_request(urls):
-    for url in urls:
-        try:
-            response = requests.get(url, proxies=proxies, verify=False)
-
-            # If the response was successful, no Exception will be raised
-            response.raise_for_status()
-        except HTTPError as http_err:
-            print(f'HTTP error occurred: {http_err}')
-        except Exception as err:
-            print(f'Other error occurred: {err}')
-        else:
-            print('Success!')
-
-
-list_url = ['https://api.github.com', 'https://api.github.com/invalid']
-print(call_request(list_url))
+    run_decorator(f'Thread{new_thread}',is_daemon)
