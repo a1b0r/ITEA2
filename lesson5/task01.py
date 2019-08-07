@@ -1,30 +1,72 @@
-import random
+# Создать декоратор, который будет запускать функцию в отдельном потоке.
+# Декоратор должен принимать следующие аргументы: название потока, является ли поток демоном.
+
+def decorator(number_of_repeats):
+    print(number_of_repeats)
+
+    def actual_decorator(func):
+        def wrapper(*args, **kwargs):
+            print(args, kwargs)
+            for i in range(number_of_repeats):
+                print('The begin of wrapper')
+                result = func(*args, **kwargs)
+                print('The end of wrapper')
+            return result, func.__name__
+        return wrapper
+    return actual_decorator
 
 
-class File:
-
-    def __init__(self, filename, open_status):
-        print("__init__")
-        self._filename = filename
-        self._open_status = open_status
-
-    def __enter__(self):
-        print("__enter__")
-        print(f'Entered args are {self._filename, self._open_status}')
-        self._f = open(self._filename, self._open_status)
-        return self._f
-
-    def __exit__(self, *args):
-        print("__exit__")
-        self._f.close()
-        if args[0] is None:
-            print(f'{args[0]}, {args[1]}, {args[2]}')
-
-    def __del__(self):
-        print("__del__")
+@decorator(10)
+def addition(arg1, arg2):
+    return arg1 + arg2
 
 
-with File('file01.txt', 'w') as file:
-    print("__main__")
-    for i in range(random.randint(1, 10)):
-        file.write("This is line %d\r" % (i + 1))
+print(addition(1,2))
+
+
+from time import time
+import requests
+from requests.exceptions import HTTPError
+import urllib3
+
+proxies = {
+    "http": 'http://127.0.0.1:3128',  # None
+    "https": 'http://127.0.0.1:3128',  # None
+}
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+
+def decorator(number_of_repeats):
+    def actual_decorator(func):
+
+        def wrapper(*args, **kwargs):
+            for i in range(number_of_repeats):
+                start_time = time()
+                print('The begin of wrapper')
+                response = func(*args, **kwargs)
+                print('The end of wrapper')
+                print(f'Running time is {time() - start_time}.')
+            return response, func.__name__
+        return wrapper
+    return actual_decorator
+
+
+@decorator(10)
+def call_request(urls):
+    for url in urls:
+        try:
+            response = requests.get(url, proxies=proxies, verify=False)
+
+            # If the response was successful, no Exception will be raised
+            response.raise_for_status()
+        except HTTPError as http_err:
+            print(f'HTTP error occurred: {http_err}')
+        except Exception as err:
+            print(f'Other error occurred: {err}')
+        else:
+            print('Success!')
+
+
+list_url = ['https://api.github.com', 'https://api.github.com/invalid']
+print(call_request(list_url))
