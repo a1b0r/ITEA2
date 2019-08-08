@@ -11,28 +11,22 @@ import random
 import time
 
 
-class RandomGeneratorThread(Thread):
-    def __init__(self, num, name):
-        self._num = num
+class ThreadGenerator(Thread):
+    def __init__(self, name):
         self._name = name
         Thread.__init__(self, name=self._name)
 
     def run(self):
-        print(f"I'm executing Thread #{self._num} with {self._name}")
+        print(f"I'm executing Thread with link {self._name}")
         time.sleep(random.randint(0, 5))
-        print(f"The end of #{self._num} with {self._name}")
+        print(f"The end with link {self._name}")
 
 
-def decorator(number_of_repeats):
-    def actual_decorator(func):
-        def wrapper(*args, **kwargs):
-            for i in range(number_of_repeats):
-                result = func(*args, **kwargs)
-                a = RandomGeneratorThread(i, args[0][i])
-                a.start()
-            return result
-        return wrapper
-    return actual_decorator
+def decorator(func):
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        return result
+    return wrapper
 
 
 DOMAIN = 'http://python.org'
@@ -70,9 +64,10 @@ with requests.Session() as session:
             print(f'Invalid url {url}')
 
 
-@decorator(10)
-def run(visit):
-    pass
+@decorator
+def run(visits):
+    for visit in visits:
+        ThreadGenerator(visit).start()
 
 
 run(list(visited))
