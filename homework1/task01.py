@@ -51,8 +51,8 @@ class Complex:
         return Complex(float(self._real - other._real), float(self._imagine - other._imagine))
 
     def __mul__(self, other):
-        return Complex(float(self._real * other._real - self._imagine * other._imagine), float(self._imagine * other._real + self._real * other._imagine))
-
+        return Complex(float(self._real * other._real - self._imagine * other._imagine),
+                       float(self._imagine * other._real + self._real * other._imagine))
     def __str__(self):
         return '%.2f+%.2fj' % (self._real, self._imagine)
 
