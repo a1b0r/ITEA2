@@ -32,25 +32,28 @@ class DataList:
     def insert(self, index, value):
         list_len = self.len()
         index -= 1
-        if index > list_len - 1:
+        if list_len >= index >= 0:
             list_end = self._list_indexes[index:]
             for idx in list_end:
-                list_end[idx] += 1
-            self._list_indexes = self._list_indexes[:index] + [index] + list_end[:]
+                list_end[idx-1] += 1
+            self._list_indexes = self._list_indexes[:index] + [index+1] + list_end[:]
             self._list_data = self._list_data[:index] + [value] + self._list_data[index:]
         else:
-            raise Exception('Out_of_range')
+            raise Exception('Out of range')
 
-    def remove(self, index, value):
+    def remove(self, index):
         list_len = self.len()
-        if index >= list_len:
-            list_end = self._list_indexes[index:]
+        index -= 1
+        if list_len >= index >= 0:
+            list_end = self._list_indexes[index+1:]
             for idx in list_end:
-                list_end[idx] -= 1
+                print(idx)
+
+                list_end[idx-1] -= 1
             self._list_indexes = self._list_indexes[:index] + list_end[:]
             self._list_data = self._list_data[:index] + self._list_data[index - 1:]
         else:
-            raise Exception('Out of range')
+            raise Exception('Out_of_range')
 
     def __len__(self):
         return len(self._list_indexes)
@@ -70,14 +73,15 @@ class DataList:
 
 new_list = DataList()
 
-new_list.append(1)
-new_list.append(2)
-new_list.append(3)
+new_list.append('a')
+new_list.append('b')
+new_list.append('c')
 print(new_list)
 new_list.pop()
 print(new_list)
-new_list.insert(2, 3)
+new_list.insert(1, 'd')
 print(new_list)
-new_list.append(4)
-new_list.append(5)
+new_list.append('f')
+print(new_list)
+new_list.remove(3)
 print(new_list)
