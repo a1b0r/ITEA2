@@ -10,8 +10,8 @@ class ShelveDictionary:
 
     def __init__(self, db_name):
         self._db_name = db_name
-        with shelve.open(db_name) as db:
-            pass
+        with shelve.open(self._db_name) as db:
+            print(self._db_name)
 
     @property
     def item(self, key):
@@ -30,8 +30,17 @@ class ShelveDictionary:
         with shelve.open(self._db_name) as db:
             del db[key]
 
+    def __str__(self):
+        with shelve.open(self._db_name) as db:
+            result = '['
+            for key, value in db.items():
+                result += f'({key},{value})'
+            result += ']'
+        return result
 
-dict1 = StopIteration('task02_db01.db')
+
+dict1 = ShelveDictionary('task02_db01.db')
 
 dict1.item = ('key01', 'value01')
 dict1.item = 'key01'
+
