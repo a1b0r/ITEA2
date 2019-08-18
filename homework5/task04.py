@@ -15,15 +15,22 @@ import re
 USERS_DB = 'users.db'
 
 
-def password_validation(password1, password2):
+def clear_db():
+    with shelve.open(USERS_DB) as db:
+        db.clear()
+
+
+def _password_validation(password1, password2):
     if password1 == password2:
-        if not re.match('^\w+$', password1):
-            return 'passwords validation failed'
+        if re.match('^\w+$', password1):
+            return True
+        else:
+            return False  # 'passwords validation failed'
     else:
-        return 'passwords not matched'
+        return False  # 'passwords not matched'
 
 
-def user_validation(username):
+def _user_validation(username):
     with shelve.open(USERS_DB) as db:
         for cursor in db.items():
             if cursor[1] == username:
@@ -31,27 +38,30 @@ def user_validation(username):
         return None
 
 
-def get_user_id(username):
+def _get_user_id(username):
     with shelve.open(USERS_DB) as db:
         for cursor in db.items():
-            if cursor[1] == username:
+            if cursor[1][0] == username:
                 return cursor[0]
         return None
 
 
-def set_user(username, password1):
+def _set_user(username, password):
     with shelve.open(USERS_DB) as db:
         list_id = []
         for cursor in db.items():
-            list_id.append(cursor[0])
-        print(max(list_id, default=0)+1)
-        db[max(list_id, default=0)+1] = list(username, password1)
+            list_id.append(int(cursor[0]))
+        if not list_id:
+            list_id.append(0)
+        user_id = str(max(list_id)+1)
+        db[user_id] = (username, password)
 
 
 def create_user(username, password1, password2):
-    if user_validation(username):
-        if password_validation(password1, password2):
-            set_user(username, password1)
+    if not _user_validation(username):
+        if _password_validation(password1, password2):
+            _set_user(username, password1)
+            return User(username, password1)
     else:
         print(f'user {username} wasnt created')
 
@@ -60,11 +70,12 @@ class User:
     def __init__(self, username, password):
         self._username = username
         self._password = password
-        self._user_id = get_user_id(self._username)
+        self._user_id = _get_user_id(self._username)
 
     def __str__(self):
         return f'user : id = {self._user_id}, name = {self._username}'
 
 
-u1 = User(username='user1', password='user1')
+clear_db
+u1 = create_user('user1', 'user1', 'user1')
 print(u1)
