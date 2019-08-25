@@ -1,6 +1,6 @@
 # Написать контекстный менеджер для работы с MySQL DB.
 
-from homework7 import test_config as config
+from homework_todo.homework7 import test_config as config
 import mysql.connector as mysql
 
 
