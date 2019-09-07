@@ -1,8 +1,9 @@
 import telebot
-from config import TOKEN, admin_ids
+from config import TOKEN
 
 
 bot = telebot.TeleBot(TOKEN)
+
 
 def check_for_admin(message):
     if message.text == "admin":
@@ -13,6 +14,7 @@ def check_for_admin(message):
 def hello(message):
     print(message.text)
     bot.send_message(message.chat.id, message.text)
+
 
 list_of_nums = ['1', '2', '3', '4', '5', '6']
 @bot.message_handler(commands=['start'])

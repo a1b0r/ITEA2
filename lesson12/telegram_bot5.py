@@ -1,10 +1,10 @@
 import telebot
-from config import TOKEN
+from config import TOKEN, admin_ids
 
 bot = telebot.TeleBot(TOKEN)
 
 
-#@bot.message_handler(func=lambda m: m.text == 'lambda')
+# @bot.message_handler(func=lambda m: m.text == 'lambda')
 @bot.message_handler(func=lambda m: m.chat.id not in admin_ids)
 def hello(message):
     print(message.text)

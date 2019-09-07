@@ -4,9 +4,11 @@ from config import TOKEN
 bot = telebot.TeleBot(TOKEN)
 
 
-@bot.message_handler(ommands=['start'])
+@bot.message_handler(commands=['start'])
 def keyboard_example(message):
-    message_kb = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True,resize_keyboard=True,row_width=3)
+    message_kb = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True,
+                                                   resize_keyboard=True,
+                                                   row_width=3)
 
     message_kb.row('1','2','3')
     message_kb.row('4','5','6')
