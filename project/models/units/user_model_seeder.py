@@ -1,6 +1,6 @@
 import random
 import string
-from lesson13.models.cats_and_products import Category, Product, Texts
+from project.models.cats_and_products import Category, Product, Texts
 from mongoengine import connect
 
 random_bool = (True, False)
